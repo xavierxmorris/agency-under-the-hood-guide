@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "layers": [
+    {
+      "id": "surfaces",
+      "order": 1,
+      "name": "User and automation surfaces",
+      "owner": "shared",
+      "responsibilities": [
+        "Accept interactive, one-shot, browser, and API requests",
+        "Select an engine, agent, repository, and execution mode"
+      ],
+      "examples": [
+        "CLI",
+        "GitHub Copilot App Agency mode",
+        "Azure DevOps browser experience",
+        "REST API"
+      ],
+      "claims": [
+        "F-002",
+        "F-016",
+        "F-017",
+        "F-018"
+      ]
+    },
+    {
+      "id": "agency-control",
+      "order": 2,
+      "name": "Agency integration and control",
+      "owner": "agency",
+      "responsibilities": [
+        "Resolve identity and configuration",
+        "Compose profiles, plugins, agents, and MCPs",
+        "Apply governance, telemetry, updates, and support context"
+      ],
+      "examples": [
+        "Configuration resolver",
+        "Plugin manager",
+        "Marketplace policy",
+        "Telemetry"
+      ],
+      "claims": [
+        "F-001",
+        "F-003",
+        "F-005",
+        "F-006",
+        "F-014"
+      ]
+    },
+    {
+      "id": "capabilities",
+      "order": 3,
+      "name": "Portable capability content",
+      "owner": "shared",
+      "responsibilities": [
+        "Package reusable instructions and workflows",
+        "Declare tool and MCP requirements"
+      ],
+      "examples": [
+        "Custom agents",
+        "Skills",
+        "Plugins",
+        "MCP declarations"
+      ],
+      "claims": [
+        "F-006",
+        "F-008",
+        "F-009"
+      ]
+    },
+    {
+      "id": "engines",
+      "order": 4,
+      "name": "Agent-engine adapters",
+      "owner": "engine",
+      "responsibilities": [
+        "Run the conversational and model-driven tool loop",
+        "Interpret portable capability content through engine-specific behavior"
+      ],
+      "examples": [
+        "GitHub Copilot CLI",
+        "Claude Code"
+      ],
+      "claims": [
+        "F-001",
+        "F-022"
+      ]
+    },
+    {
+      "id": "resources",
+      "order": 5,
+      "name": "Tools and resources",
+      "owner": "external",
+      "responsibilities": [
+        "Expose tools and data",
+        "Enforce backing-service authentication and authorization"
+      ],
+      "examples": [
+        "MCP services",
+        "Repositories",
+        "Build systems",
+        "External APIs"
+      ],
+      "claims": [
+        "F-009"
+      ]
+    },
+    {
+      "id": "execution",
+      "order": 6,
+      "name": "Execution environments",
+      "owner": "shared",
+      "responsibilities": [
+        "Provide filesystem, process, network, and compute boundaries",
+        "Host local or remote agent work"
+      ],
+      "examples": [
+        "Local device",
+        "Agency-managed compute",
+        "Customer pipeline (preview where supported)"
+      ],
+      "claims": [
+        "F-017",
+        "I-005"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "surfaces",
+      "to": "agency-control",
+      "label": "request and context"
+    },
+    {
+      "from": "agency-control",
+      "to": "capabilities",
+      "label": "resolve and govern"
+    },
+    {
+      "from": "capabilities",
+      "to": "engines",
+      "label": "adapt and load"
+    },
+    {
+      "from": "engines",
+      "to": "resources",
+      "label": "invoke tools"
+    },
+    {
+      "from": "engines",
+      "to": "execution",
+      "label": "run work"
+    }
+  ]
+}

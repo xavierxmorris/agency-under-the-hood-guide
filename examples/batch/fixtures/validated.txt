@@ -1,0 +1,4 @@
+Change: Update the retry timeout from 10 seconds to 15 seconds.
+Validation evidence:
+- unit checks: passed
+- integration checks: passed

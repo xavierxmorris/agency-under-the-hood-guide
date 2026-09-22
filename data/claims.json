@@ -1,0 +1,489 @@
+{
+  "schema_version": 1,
+  "agency_release": "2026.9.16.4",
+  "scope": "Released Agency documentation and observable CLI behavior",
+  "claims": [
+    {
+      "id": "F-001",
+      "kind": "fact",
+      "category": "architecture",
+      "status": "released",
+      "statement": "Agency describes its client as a thin integration layer around supported agent engines.",
+      "evidence": [
+        {
+          "path": "docs/agency/Overview/overview.md",
+          "section": "Agency Client"
+        }
+      ]
+    },
+    {
+      "id": "F-002",
+      "kind": "fact",
+      "category": "surfaces",
+      "status": "released",
+      "statement": "Released Agency entry points include a local CLI, GitHub Copilot App Agency mode, Azure DevOps experiences, and APIs.",
+      "evidence": [
+        {
+          "path": "docs/agency/Overview/overview.md",
+          "section": "Offering Map"
+        },
+        {
+          "path": "docs/agency/index.md",
+          "section": "Where Can It Run"
+        }
+      ]
+    },
+    {
+      "id": "F-003",
+      "kind": "fact",
+      "category": "configuration",
+      "status": "released",
+      "statement": "Agency discovers configuration from the user-level location through repository and nearer-directory files, with closer files taking precedence.",
+      "evidence": [
+        {
+          "path": "docs/agency/CLI/agency-config.md",
+          "section": "Config file resolution"
+        }
+      ]
+    },
+    {
+      "id": "F-004",
+      "kind": "fact",
+      "category": "configuration",
+      "status": "released",
+      "statement": "Remote configuration is merged beneath the local values of the file that declares it, and transitive remote configuration is rejected.",
+      "evidence": [
+        {
+          "path": "docs/agency/CLI/agency-config-remote.md",
+          "section": "Merge priority"
+        },
+        {
+          "path": "docs/agency/CLI/agency-config-remote.md",
+          "section": "Restrictions"
+        }
+      ]
+    },
+    {
+      "id": "F-005",
+      "kind": "fact",
+      "category": "configuration",
+      "status": "released",
+      "statement": "Named profiles can overlay base configuration, while isolated profile activation removes base and ambient host MCP configuration.",
+      "evidence": [
+        {
+          "path": "docs/agency/CLI/agency-config-profiles.md",
+          "section": "Activating a profile"
+        },
+        {
+          "path": "docs/agency/CLI/agency-config-profiles.md",
+          "section": "Isolated activation (`--profile-only`)"
+        }
+      ]
+    },
+    {
+      "id": "F-006",
+      "kind": "fact",
+      "category": "capabilities",
+      "status": "released",
+      "statement": "Plugins are Agency's primary distribution unit for agents, skills, MCPs, and related resources.",
+      "evidence": [
+        {
+          "path": "docs/agency/Tools/Plugins/plugins.md",
+          "section": "Plugins"
+        }
+      ]
+    },
+    {
+      "id": "F-007",
+      "kind": "fact",
+      "category": "capabilities",
+      "status": "released",
+      "statement": "Agency supports ephemeral session plugins and persistent plugins managed through configuration.",
+      "evidence": [
+        {
+          "path": "docs/agency/Tools/Plugins/plugins.md",
+          "section": "Ephemeral Plugins"
+        },
+        {
+          "path": "docs/agency/Tools/Plugins/plugins.md",
+          "section": "Persistent Plugins"
+        }
+      ]
+    },
+    {
+      "id": "F-008",
+      "kind": "fact",
+      "category": "capabilities",
+      "status": "released",
+      "statement": "Agency custom agents use Markdown with YAML frontmatter and remain compatible with the GitHub Copilot custom agent schema.",
+      "evidence": [
+        {
+          "path": "docs/agency/Tools/CustomAgents/creating-custom-agents.md",
+          "section": "Creating Custom Agents"
+        }
+      ]
+    },
+    {
+      "id": "F-009",
+      "kind": "fact",
+      "category": "authorization",
+      "status": "released",
+      "statement": "MCP tool exposure and agent tool allowlists restrict usable tools, while the backing service credential remains authoritative for authorization.",
+      "evidence": [
+        {
+          "path": "docs/agency/Tools/CustomAgents/mcp-servers.md",
+          "section": "How agent and MCP tool allowlists work"
+        }
+      ]
+    },
+    {
+      "id": "F-010",
+      "kind": "fact",
+      "category": "evaluation",
+      "status": "released",
+      "statement": "Plugin evals measure a plugin against authored scenarios, while batch runs measure agent reliability across a dataset.",
+      "evidence": [
+        {
+          "path": "docs/agency/Tools/Evals/index.md",
+          "section": "Which tool do I want?"
+        },
+        {
+          "path": "docs/agency/Tools/BatchRuns/index.md",
+          "section": "Is this the tool I want?"
+        }
+      ]
+    },
+    {
+      "id": "F-011",
+      "kind": "fact",
+      "category": "evaluation",
+      "status": "released",
+      "statement": "Plugin-eval grading definitions are withheld from the evaluated agent.",
+      "evidence": [
+        {
+          "path": "docs/agency/Tools/Evals/index.md",
+          "section": "How an eval is put together"
+        },
+        {
+          "path": "docs/agency/Tools/Evals/harnesses.md",
+          "section": "Grading definitions are withheld"
+        }
+      ]
+    },
+    {
+      "id": "F-012",
+      "kind": "fact",
+      "category": "evaluation",
+      "status": "released",
+      "statement": "The default plugin-eval harness uses per-task containers, while the host harness provides no malicious-task isolation boundary.",
+      "evidence": [
+        {
+          "path": "docs/agency/Tools/Evals/harnesses.md",
+          "section": "Choosing a harness"
+        }
+      ]
+    },
+    {
+      "id": "F-013",
+      "kind": "fact",
+      "category": "evaluation",
+      "status": "released",
+      "statement": "Batch-run iterations measure repeated reliability, while attempts provide retry tolerance within an iteration.",
+      "evidence": [
+        {
+          "path": "docs/agency/Tools/BatchRuns/index.md",
+          "section": "How a batch run is put together"
+        }
+      ]
+    },
+    {
+      "id": "F-014",
+      "kind": "fact",
+      "category": "observability",
+      "status": "released",
+      "statement": "Agency Telemetry provides an access-controlled, privacy-scrubbed selection of activity and outcome events rather than raw transcripts.",
+      "evidence": [
+        {
+          "path": "docs/agency/Tools/Telemetry/overview.md",
+          "section": "Agency Telemetry"
+        },
+        {
+          "path": "docs/agency/Tools/Telemetry/querying-agency-telemetry.md",
+          "section": "Privacy and data coverage"
+        }
+      ]
+    },
+    {
+      "id": "F-015",
+      "kind": "fact",
+      "category": "improvement",
+      "status": "released",
+      "statement": "Agency readiness guidance prioritizes outcome measures and deterministic validation over file-presence signals.",
+      "evidence": [
+        {
+          "path": "docs/agency/Guidance/measuring-ai-readiness.md",
+          "section": "Summary"
+        },
+        {
+          "path": "docs/agency/Guidance/measuring-ai-readiness.md",
+          "section": "Deterministic validation matters most"
+        }
+      ]
+    },
+    {
+      "id": "F-016",
+      "kind": "fact",
+      "category": "surfaces",
+      "status": "released",
+      "statement": "GitHub Copilot App Agency mode uses the same Agency foundation for configuration and integrations, while app-specific workflows can differ from the CLI.",
+      "evidence": [
+        {
+          "path": "docs/agency/GitHubCopilotApp/index.md",
+          "section": "What Agency mode gives you"
+        }
+      ]
+    },
+    {
+      "id": "F-017",
+      "kind": "fact",
+      "category": "hosted",
+      "status": "released",
+      "statement": "The Agency API creates, validates, manages, and monitors hosted jobs in Azure DevOps.",
+      "evidence": [
+        {
+          "path": "docs/agency/AzureDevOps/Agency API/overview.md",
+          "section": "Agency API Overview"
+        }
+      ]
+    },
+    {
+      "id": "F-018",
+      "kind": "fact",
+      "category": "hosted",
+      "status": "released",
+      "statement": "Agency Hub in Azure DevOps starts, manages, and monitors background agent work from a browser.",
+      "evidence": [
+        {
+          "path": "docs/agency/AzureDevOps/Experiences/agent-hub.md",
+          "section": "Agency Hub in ADO"
+        }
+      ]
+    },
+    {
+      "id": "F-019",
+      "kind": "fact",
+      "category": "support",
+      "status": "released",
+      "statement": "Local Agency sessions load a version-matched built-in Agency plugin that includes support and pull-request completion skills without adding them to user plugin configuration.",
+      "evidence": [
+        {
+          "path": "docs/agency/Tools/Plugins/plugins.md",
+          "section": "The agency Plugin"
+        }
+      ]
+    },
+    {
+      "id": "F-020",
+      "kind": "fact",
+      "category": "evaluation",
+      "status": "experimental",
+      "statement": "The plugin-evaluation command family is documented as experimental and version-sensitive.",
+      "evidence": [
+        {
+          "path": "docs/agency/Tools/Evals/index.md",
+          "section": "Evals"
+        }
+      ]
+    },
+    {
+      "id": "F-021",
+      "kind": "fact",
+      "category": "governance",
+      "status": "released",
+      "statement": "Agency marketplace scopes represent different curation and operational maturity levels.",
+      "evidence": [
+        {
+          "path": "docs/agency/Tools/Plugins/marketplaces.md",
+          "section": "Marketplace Types"
+        }
+      ]
+    },
+    {
+      "id": "F-022",
+      "kind": "fact",
+      "category": "engines",
+      "status": "released",
+      "statement": "Plugin engine compatibility is explicit and does not imply identical behavior across every supported engine.",
+      "evidence": [
+        {
+          "path": "docs/agency/Tools/Plugins/plugin-compatibility.md",
+          "section": "Engine Compatibility"
+        }
+      ]
+    },
+    {
+      "id": "I-001",
+      "kind": "interpretation",
+      "category": "architecture",
+      "status": "released",
+      "statement": "Agency is best modeled as an integration, governance, and execution control plane around agent engines.",
+      "derived_from": [
+        "F-001",
+        "F-002",
+        "F-017"
+      ]
+    },
+    {
+      "id": "I-002",
+      "kind": "interpretation",
+      "category": "architecture",
+      "status": "released",
+      "statement": "The product can be taught as six layers: surfaces, Agency control, portable capabilities, engine adapters, tools and resources, and execution environments.",
+      "derived_from": [
+        "F-001",
+        "F-002",
+        "F-006",
+        "F-009",
+        "F-017"
+      ]
+    },
+    {
+      "id": "I-003",
+      "kind": "interpretation",
+      "category": "configuration",
+      "status": "released",
+      "statement": "Agency configuration is a provenance-aware merge graph rather than a single linear precedence list.",
+      "derived_from": [
+        "F-003",
+        "F-004",
+        "F-005"
+      ]
+    },
+    {
+      "id": "I-004",
+      "kind": "interpretation",
+      "category": "authorization",
+      "status": "released",
+      "statement": "Effective tool access is the intersection of implemented tools, exposed tools, agent allowlists, and backing-service authorization.",
+      "derived_from": [
+        "F-009"
+      ]
+    },
+    {
+      "id": "I-005",
+      "kind": "interpretation",
+      "category": "lifecycles",
+      "status": "released",
+      "statement": "Local sessions and hosted jobs share capability concepts but have distinct identity, configuration, compute, and validation boundaries.",
+      "derived_from": [
+        "F-003",
+        "F-006",
+        "F-017",
+        "F-018"
+      ]
+    },
+    {
+      "id": "I-006",
+      "kind": "interpretation",
+      "category": "improvement",
+      "status": "released",
+      "statement": "The released improvement loop is observe, encode, evaluate, govern, deploy, and measure again.",
+      "derived_from": [
+        "F-010",
+        "F-014",
+        "F-015",
+        "F-021"
+      ]
+    },
+    {
+      "id": "R-001",
+      "kind": "recommendation",
+      "category": "configuration",
+      "status": "released",
+      "statement": "Use isolated profiles when a run must not inherit ambient user or editor MCP configuration.",
+      "derived_from": [
+        "F-005",
+        "I-003"
+      ]
+    },
+    {
+      "id": "R-002",
+      "kind": "recommendation",
+      "category": "reproducibility",
+      "status": "released",
+      "statement": "Pin mutable plugin, remote-configuration, artifact, and pipeline inputs when reproducibility matters.",
+      "derived_from": [
+        "F-004",
+        "F-007",
+        "I-003"
+      ]
+    },
+    {
+      "id": "R-003",
+      "kind": "recommendation",
+      "category": "hosted",
+      "status": "released",
+      "statement": "Verify hosted agent results with deterministic checks, tests, policy, artifact inspection, or human review.",
+      "derived_from": [
+        "F-015",
+        "F-017",
+        "I-005"
+      ]
+    },
+    {
+      "id": "R-004",
+      "kind": "recommendation",
+      "category": "evaluation",
+      "status": "released",
+      "statement": "Use plugin evals for capability quality, include negative cases, and use batch runs for repeated reliability.",
+      "derived_from": [
+        "F-010",
+        "F-011",
+        "F-013"
+      ]
+    },
+    {
+      "id": "R-005",
+      "kind": "recommendation",
+      "category": "governance",
+      "status": "released",
+      "statement": "Do not treat installability as proof of trust; consider source, ownership, pinning, review, and marketplace maturity.",
+      "derived_from": [
+        "F-007",
+        "F-021"
+      ]
+    },
+    {
+      "id": "R-006",
+      "kind": "recommendation",
+      "category": "observability",
+      "status": "released",
+      "statement": "Measure telemetry at the entity grain that answers the question and account for delayed and intentionally incomplete coverage.",
+      "derived_from": [
+        "F-014"
+      ]
+    },
+    {
+      "id": "R-007",
+      "kind": "recommendation",
+      "category": "validation",
+      "status": "released",
+      "statement": "Test local and hosted behavior separately because policy, identity, network, and compute boundaries differ.",
+      "derived_from": [
+        "F-017",
+        "I-005"
+      ]
+    },
+    {
+      "id": "R-008",
+      "kind": "recommendation",
+      "category": "improvement",
+      "status": "released",
+      "statement": "Encode lessons in the strongest practical mechanism: deterministic check, regression test, eval, runtime policy, then guidance.",
+      "derived_from": [
+        "F-015",
+        "I-006"
+      ]
+    }
+  ]
+}

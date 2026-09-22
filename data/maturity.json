@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "agency_release": "2026.9.16.4",
+  "surfaces": [
+    {
+      "id": "core-cli",
+      "name": "Local CLI",
+      "status": "released",
+      "guide_policy": "Teach as a core surface.",
+      "claims": [
+        "F-001",
+        "F-002"
+      ]
+    },
+    {
+      "id": "copilot-app-mode",
+      "name": "GitHub Copilot App Agency mode",
+      "status": "released",
+      "guide_policy": "Teach the shared foundation and allow app-specific workflow differences.",
+      "claims": [
+        "F-016"
+      ]
+    },
+    {
+      "id": "ado-hub",
+      "name": "Agency Hub in Azure DevOps",
+      "status": "released",
+      "guide_policy": "Teach this browser surface as released. Other Azure DevOps automation and compute surfaces have separate maturity and are outside this guide's stable baseline.",
+      "claims": [
+        "F-018"
+      ]
+    },
+    {
+      "id": "job-api",
+      "name": "Hosted job API",
+      "status": "released",
+      "guide_policy": "Teach intent, policy, compute, result, and validation boundaries.",
+      "claims": [
+        "F-017"
+      ]
+    },
+    {
+      "id": "plugins-agents",
+      "name": "Plugins and custom agents",
+      "status": "released",
+      "guide_policy": "Teach as the reusable capability and distribution model.",
+      "claims": [
+        "F-006",
+        "F-007",
+        "F-008",
+        "F-021",
+        "F-022"
+      ]
+    },
+    {
+      "id": "batch-runs",
+      "name": "Batch runs",
+      "status": "released",
+      "guide_policy": "Teach as repeated reliability measurement.",
+      "claims": [
+        "F-010",
+        "F-013"
+      ]
+    },
+    {
+      "id": "plugin-evals",
+      "name": "Plugin evaluation command family",
+      "status": "experimental",
+      "guide_policy": "Teach concepts and safety boundaries; label command shapes as version-sensitive.",
+      "claims": [
+        "F-010",
+        "F-011",
+        "F-012",
+        "F-020"
+      ]
+    },
+    {
+      "id": "unshipped-surfaces",
+      "name": "Roadmap, private-preview, and internal-only systems",
+      "status": "excluded",
+      "guide_policy": "Do not document or infer behavior.",
+      "claims": []
+    }
+  ]
+}

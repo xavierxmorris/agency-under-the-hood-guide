@@ -1,0 +1,29 @@
+batch:
+  id: agency-learning-reliability
+  file: ./batch.csv
+
+job:
+  id: "{{id}}"
+  agent: "{{agent}}"
+  model: "{{model}}"
+  prompt: "{{prompt}}"
+  iterations: 5
+  maxAttempts: 1
+  workingDirectory: "../../.artifacts/batch/{{$job_id}}/{{$iteration}}"
+  validation:
+    exitCode: 0
+    scripts:
+      - command: python ../../../../examples/batch/validate_result.py "{{expected}}"
+        exitCodes: [0]
+        errorOnFail: true
+        workingDirectory: "../../.artifacts/batch/{{$job_id}}/{{$iteration}}"
+
+processing:
+  multi: false
+  maxProcesses: 1
+
+hooks:
+  beforeIteration:
+    - command: python ./prepare_workspace.py --workspace "../../.artifacts/batch/{{$job_id}}/{{$iteration}}" --fixture "./fixtures/{{fixture}}"
+      exitCodes: [0]
+      errorOnFail: true

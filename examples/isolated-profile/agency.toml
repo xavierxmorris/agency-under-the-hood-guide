@@ -1,0 +1,5 @@
+[profiles.learning.mcps.builtins]
+ado = false
+
+[profiles.learning.plugins]
+default = []

@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "scale": {
+    "minimum": 0,
+    "maximum": 4,
+    "meaning": {
+      "0": "No evidence",
+      "1": "Manual and fragile",
+      "2": "Partially repeatable",
+      "3": "Reliable with limited intervention",
+      "4": "Measured, automated, and continuously improved"
+    }
+  },
+  "dimensions": [
+    {
+      "id": "verification",
+      "name": "Verification readiness",
+      "question": "Can the repository automatically prove a scoped change is correct?",
+      "probe": "From a clean checkout, restore, build, test, make a scoped change, and run the same gates.",
+      "metrics": [
+        "verification success rate",
+        "regression escape rate",
+        "validation duration"
+      ],
+      "score": null,
+      "evidence": []
+    },
+    {
+      "id": "understandability",
+      "name": "Repository understandability",
+      "question": "Can an agent locate ownership, dependencies, and validation without guessing?",
+      "probe": "Locate the owning code and instructions, explain impact, and identify the correct checks before editing.",
+      "metrics": [
+        "time to locate owning code",
+        "edits required before merge",
+        "wrong-turn rate"
+      ],
+      "score": null,
+      "evidence": []
+    },
+    {
+      "id": "automation",
+      "name": "Automation readiness",
+      "question": "Can the documented workflow run without undocumented manual steps?",
+      "probe": "Run the CI-equivalent workflow from documented commands on a clean environment.",
+      "metrics": [
+        "pipeline reliability",
+        "manual steps per run",
+        "setup failure rate"
+      ],
+      "score": null,
+      "evidence": []
+    },
+    {
+      "id": "operability",
+      "name": "Agent operability",
+      "question": "Can an agent diagnose failures, retry safely, and leave reviewable evidence?",
+      "probe": "Complete a representative task, recover from one induced failure, and produce a reviewable handoff.",
+      "metrics": [
+        "human intervention frequency",
+        "autonomous run duration",
+        "recovery success rate"
+      ],
+      "score": null,
+      "evidence": []
+    },
+    {
+      "id": "effectiveness",
+      "name": "Outcome effectiveness",
+      "question": "Does agent use improve speed without reducing quality?",
+      "probe": "Compare representative tasks with a baseline using paired speed and quality measures.",
+      "metrics": [
+        "cycle time",
+        "defect rate",
+        "mean time to resolve",
+        "durable-fix conversion rate"
+      ],
+      "score": null,
+      "evidence": []
+    }
+  ]
+}

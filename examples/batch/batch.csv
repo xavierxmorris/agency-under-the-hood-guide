@@ -1,0 +1,3 @@
+id,agent,model,fixture,expected,prompt
+validated-change,agent-under-test,MODEL_PLACEHOLDER,validated.txt,VALIDATED,Read input.txt and write exactly VALIDATED or UNVERIFIED to result.txt based on whether the input contains passing validation evidence.
+unverified-change,agent-under-test,MODEL_PLACEHOLDER,unverified.txt,UNVERIFIED,Read input.txt and write exactly VALIDATED or UNVERIFIED to result.txt based on whether the input contains passing validation evidence.

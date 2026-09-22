@@ -1,0 +1,51 @@
+{
+  "repository": "sample-service",
+  "assessment_date": "2026-09-01",
+  "dimensions": [
+    {
+      "id": "verification",
+      "score": 4,
+      "evidence": [
+        "Clean restore, build, unit tests, and integration tests run in CI.",
+        "The same gate is documented for local use."
+      ]
+    },
+    {
+      "id": "understandability",
+      "score": 3,
+      "evidence": [
+        "Ownership and architecture are documented.",
+        "One generated-code boundary remains unclear."
+      ]
+    },
+    {
+      "id": "automation",
+      "score": 3,
+      "evidence": [
+        "CI is repeatable.",
+        "A release smoke test still needs one manual approval."
+      ]
+    },
+    {
+      "id": "operability",
+      "score": 2,
+      "evidence": [
+        "Agents can run the normal gate.",
+        "Failure recovery is not yet measured."
+      ]
+    },
+    {
+      "id": "effectiveness",
+      "score": 3,
+      "evidence": [
+        "Cycle time and regression escapes are measured together.",
+        "The baseline contains only ten tasks."
+      ]
+    }
+  ],
+  "next_actions": [
+    "Add a deterministic generated-code ownership check.",
+    "Create a recovery batch for the three most common CI failures.",
+    "Expand the outcome baseline to at least thirty representative tasks."
+  ]
+}

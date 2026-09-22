@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agency under the hood</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #5b6474;
+      --paper: #f7f5ef;
+      --panel: #ffffff;
+      --line: #d9d4c9;
+      --blue: #1456d8;
+      --cyan: #20a4b8;
+      --amber: #c77800;
+      --green: #247a4d;
+      --red: #b42318;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+    }
+    header {
+      padding: 5rem max(1.5rem, calc((100vw - 1120px) / 2));
+      color: white;
+      background:
+        radial-gradient(circle at 90% 10%, #27a7b8 0, transparent 35%),
+        linear-gradient(135deg, #0f2f68, #1e57ba 60%, #154892);
+    }
+    header p { max-width: 760px; font-size: 1.2rem; }
+    h1 { max-width: 820px; margin: 0; font-size: clamp(2.5rem, 6vw, 5.2rem); line-height: .98; }
+    main { width: min(1120px, calc(100% - 3rem)); margin: 0 auto; }
+    section { padding: 4rem 0; }
+    h2 { font-size: clamp(1.8rem, 4vw, 3rem); margin-bottom: .5rem; }
+    .lede { max-width: 780px; color: var(--muted); font-size: 1.1rem; }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 1rem;
+      margin-top: -2rem;
+    }
+    .metric, .layer, .loop-step {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgb(20 34 60 / 8%);
+    }
+    .metric { padding: 1.4rem; }
+    .metric strong { display: block; font-size: 2rem; color: var(--blue); }
+    .architecture { display: grid; gap: 1rem; margin-top: 2rem; }
+    .layer {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 1rem;
+      padding: 1.25rem;
+    }
+    .layer-number {
+      display: grid;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      background: var(--blue);
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    .layer h3 { margin: .1rem 0 .5rem; font-size: 1.35rem; }
+    .layer ul { margin: .4rem 0; padding-left: 1.25rem; }
+    .eyebrow { margin: 0; color: var(--blue); text-transform: uppercase; letter-spacing: .08em; font-size: .75rem; font-weight: 700; }
+    .examples { color: var(--muted); }
+    .claims { color: var(--blue); font-size: .85rem; }
+    .loop { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .75rem; margin-top: 2rem; }
+    .loop-step { padding: 1rem; text-align: center; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; background: var(--panel); margin-top: 1.5rem; }
+    th, td { padding: .9rem; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: #edf2fb; }
+    .status { padding: .2rem .55rem; border-radius: 999px; font-size: .8rem; font-weight: 700; }
+    .released { color: var(--green); background: #e6f4ec; }
+    .experimental { color: var(--amber); background: #fff1d6; }
+    .excluded { color: var(--red); background: #feeceb; }
+    details { padding: .85rem 0; border-bottom: 1px solid var(--line); }
+    summary { cursor: pointer; display: flex; gap: .75rem; }
+    summary code { min-width: 52px; color: var(--blue); }
+    details p { margin-left: 64px; color: var(--muted); }
+    footer { padding: 3rem; text-align: center; color: var(--muted); }
+    @media (max-width: 620px) {
+      header { padding-top: 3rem; padding-bottom: 4rem; }
+      .layer { grid-template-columns: 48px 1fr; }
+      th:nth-child(3), td:nth-child(3) { display: none; }
+      details p { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="eyebrow" style="color:#bdeef3">Evidence-backed field guide</p>
+    <h1>Agency under the hood</h1>
+    <p>Agency is an integration, governance, and execution control plane around
+    supported agent engines. This view separates what Agency owns, what the engine
+    owns, and what your tools, credentials, and validation must still prove.</p>
+    <p>Evidence pin: Agency 2026.9.16.4</p>
+  </header>
+  <main>
+    <div class="metrics">
+      <div class="metric"><strong>22</strong>documented facts</div>
+      <div class="metric"><strong>6</strong>architectural interpretations</div>
+      <div class="metric"><strong>8</strong>operating recommendations</div>
+      <div class="metric"><strong>6</strong>architecture layers</div>
+    </div>
+    <section>
+      <h2>Six-layer mental model</h2>
+      <p class="lede">The model keeps portable agent content separate from Agency's
+      control functions and from the selected engine's runtime loop.</p>
+      <div class="architecture">
+            <article class="layer">
+              <div class="layer-number">1</div>
+              <div>
+                <p class="eyebrow">shared</p>
+                <h3>User and automation surfaces</h3>
+                <ul><li>Accept interactive, one-shot, browser, and API requests</li><li>Select an engine, agent, repository, and execution mode</li></ul>
+                <p class="examples">CLI · GitHub Copilot App Agency mode · Azure DevOps browser experience · REST API</p>
+                <p class="claims">Evidence: F-002, F-016, F-017, F-018</p>
+              </div>
+            </article>
+            <article class="layer">
+              <div class="layer-number">2</div>
+              <div>
+                <p class="eyebrow">agency</p>
+                <h3>Agency integration and control</h3>
+                <ul><li>Resolve identity and configuration</li><li>Compose profiles, plugins, agents, and MCPs</li><li>Apply governance, telemetry, updates, and support context</li></ul>
+                <p class="examples">Configuration resolver · Plugin manager · Marketplace policy · Telemetry</p>
+                <p class="claims">Evidence: F-001, F-003, F-005, F-006, F-014</p>
+              </div>
+            </article>
+            <article class="layer">
+              <div class="layer-number">3</div>
+              <div>
+                <p class="eyebrow">shared</p>
+                <h3>Portable capability content</h3>
+                <ul><li>Package reusable instructions and workflows</li><li>Declare tool and MCP requirements</li></ul>
+                <p class="examples">Custom agents · Skills · Plugins · MCP declarations</p>
+                <p class="claims">Evidence: F-006, F-008, F-009</p>
+              </div>
+            </article>
+            <article class="layer">
+              <div class="layer-number">4</div>
+              <div>
+                <p class="eyebrow">engine</p>
+                <h3>Agent-engine adapters</h3>
+                <ul><li>Run the conversational and model-driven tool loop</li><li>Interpret portable capability content through engine-specific behavior</li></ul>
+                <p class="examples">GitHub Copilot CLI · Claude Code</p>
+                <p class="claims">Evidence: F-001, F-022</p>
+              </div>
+            </article>
+            <article class="layer">
+              <div class="layer-number">5</div>
+              <div>
+                <p class="eyebrow">external</p>
+                <h3>Tools and resources</h3>
+                <ul><li>Expose tools and data</li><li>Enforce backing-service authentication and authorization</li></ul>
+                <p class="examples">MCP services · Repositories · Build systems · External APIs</p>
+                <p class="claims">Evidence: F-009</p>
+              </div>
+            </article>
+            <article class="layer">
+              <div class="layer-number">6</div>
+              <div>
+                <p class="eyebrow">shared</p>
+                <h3>Execution environments</h3>
+                <ul><li>Provide filesystem, process, network, and compute boundaries</li><li>Host local or remote agent work</li></ul>
+                <p class="examples">Local device · Agency-managed compute · Customer pipeline (preview where supported)</p>
+                <p class="claims">Evidence: F-017, I-005</p>
+              </div>
+            </article></div>
+    </section>
+    <section>
+      <h2>Improvement loop</h2>
+      <p class="lede">Observe real outcomes, encode the lesson in the strongest
+      practical mechanism, prove it, govern distribution, and measure again.</p>
+      <div class="loop">
+        <div class="loop-step">Observe</div>
+        <div class="loop-step">Classify</div>
+        <div class="loop-step">Encode</div>
+        <div class="loop-step">Evaluate</div>
+        <div class="loop-step">Govern</div>
+        <div class="loop-step">Measure</div>
+      </div>
+    </section>
+    <section>
+      <h2>Maturity handling</h2>
+      <p class="lede">Experimental commands stay visible but version-sensitive.
+      Unshipped and internal-only systems are excluded rather than inferred.</p>
+      <table>
+        <thead><tr><th>Surface</th><th>Status</th><th>Guide policy</th></tr></thead>
+        <tbody><tr><td>Local CLI</td><td><span class="status released">released</span></td><td>Teach as a core surface.</td></tr><tr><td>GitHub Copilot App Agency mode</td><td><span class="status released">released</span></td><td>Teach the shared foundation and allow app-specific workflow differences.</td></tr><tr><td>Agency Hub in Azure DevOps</td><td><span class="status released">released</span></td><td>Teach this browser surface as released. Other Azure DevOps automation and compute surfaces have separate maturity and are outside this guide&#x27;s stable baseline.</td></tr><tr><td>Hosted job API</td><td><span class="status released">released</span></td><td>Teach intent, policy, compute, result, and validation boundaries.</td></tr><tr><td>Plugins and custom agents</td><td><span class="status released">released</span></td><td>Teach as the reusable capability and distribution model.</td></tr><tr><td>Batch runs</td><td><span class="status released">released</span></td><td>Teach as repeated reliability measurement.</td></tr><tr><td>Plugin evaluation command family</td><td><span class="status experimental">experimental</span></td><td>Teach concepts and safety boundaries; label command shapes as version-sensitive.</td></tr><tr><td>Roadmap, private-preview, and internal-only systems</td><td><span class="status excluded">excluded</span></td><td>Do not document or infer behavior.</td></tr></tbody>
+      </table>
+    </section>
+    <section>
+      <h2>Claim ledger</h2>
+      <p class="lede">Facts point to installed documentation. Interpretations and
+      recommendations identify the claims from which they were derived.</p>
+
+            <details>
+              <summary><code>F-001</code>
+                <span>Agency describes its client as a thin integration layer around supported agent engines.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                architecture · released</p>
+              <p>docs/agency/Overview/overview.md — Agency Client</p>
+            </details>
+            <details>
+              <summary><code>F-002</code>
+                <span>Released Agency entry points include a local CLI, GitHub Copilot App Agency mode, Azure DevOps experiences, and APIs.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                surfaces · released</p>
+              <p>docs/agency/Overview/overview.md — Offering Map; docs/agency/index.md — Where Can It Run</p>
+            </details>
+            <details>
+              <summary><code>F-003</code>
+                <span>Agency discovers configuration from the user-level location through repository and nearer-directory files, with closer files taking precedence.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                configuration · released</p>
+              <p>docs/agency/CLI/agency-config.md — Config file resolution</p>
+            </details>
+            <details>
+              <summary><code>F-004</code>
+                <span>Remote configuration is merged beneath the local values of the file that declares it, and transitive remote configuration is rejected.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                configuration · released</p>
+              <p>docs/agency/CLI/agency-config-remote.md — Merge priority; docs/agency/CLI/agency-config-remote.md — Restrictions</p>
+            </details>
+            <details>
+              <summary><code>F-005</code>
+                <span>Named profiles can overlay base configuration, while isolated profile activation removes base and ambient host MCP configuration.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                configuration · released</p>
+              <p>docs/agency/CLI/agency-config-profiles.md — Activating a profile; docs/agency/CLI/agency-config-profiles.md — Isolated activation (`--profile-only`)</p>
+            </details>
+            <details>
+              <summary><code>F-006</code>
+                <span>Plugins are Agency&#x27;s primary distribution unit for agents, skills, MCPs, and related resources.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                capabilities · released</p>
+              <p>docs/agency/Tools/Plugins/plugins.md — Plugins</p>
+            </details>
+            <details>
+              <summary><code>F-007</code>
+                <span>Agency supports ephemeral session plugins and persistent plugins managed through configuration.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                capabilities · released</p>
+              <p>docs/agency/Tools/Plugins/plugins.md — Ephemeral Plugins; docs/agency/Tools/Plugins/plugins.md — Persistent Plugins</p>
+            </details>
+            <details>
+              <summary><code>F-008</code>
+                <span>Agency custom agents use Markdown with YAML frontmatter and remain compatible with the GitHub Copilot custom agent schema.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                capabilities · released</p>
+              <p>docs/agency/Tools/CustomAgents/creating-custom-agents.md — Creating Custom Agents</p>
+            </details>
+            <details>
+              <summary><code>F-009</code>
+                <span>MCP tool exposure and agent tool allowlists restrict usable tools, while the backing service credential remains authoritative for authorization.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                authorization · released</p>
+              <p>docs/agency/Tools/CustomAgents/mcp-servers.md — How agent and MCP tool allowlists work</p>
+            </details>
+            <details>
+              <summary><code>F-010</code>
+                <span>Plugin evals measure a plugin against authored scenarios, while batch runs measure agent reliability across a dataset.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                evaluation · released</p>
+              <p>docs/agency/Tools/Evals/index.md — Which tool do I want?; docs/agency/Tools/BatchRuns/index.md — Is this the tool I want?</p>
+            </details>
+            <details>
+              <summary><code>F-011</code>
+                <span>Plugin-eval grading definitions are withheld from the evaluated agent.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                evaluation · released</p>
+              <p>docs/agency/Tools/Evals/index.md — How an eval is put together; docs/agency/Tools/Evals/harnesses.md — Grading definitions are withheld</p>
+            </details>
+            <details>
+              <summary><code>F-012</code>
+                <span>The default plugin-eval harness uses per-task containers, while the host harness provides no malicious-task isolation boundary.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                evaluation · released</p>
+              <p>docs/agency/Tools/Evals/harnesses.md — Choosing a harness</p>
+            </details>
+            <details>
+              <summary><code>F-013</code>
+                <span>Batch-run iterations measure repeated reliability, while attempts provide retry tolerance within an iteration.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                evaluation · released</p>
+              <p>docs/agency/Tools/BatchRuns/index.md — How a batch run is put together</p>
+            </details>
+            <details>
+              <summary><code>F-014</code>
+                <span>Agency Telemetry provides an access-controlled, privacy-scrubbed selection of activity and outcome events rather than raw transcripts.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                observability · released</p>
+              <p>docs/agency/Tools/Telemetry/overview.md — Agency Telemetry; docs/agency/Tools/Telemetry/querying-agency-telemetry.md — Privacy and data coverage</p>
+            </details>
+            <details>
+              <summary><code>F-015</code>
+                <span>Agency readiness guidance prioritizes outcome measures and deterministic validation over file-presence signals.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                improvement · released</p>
+              <p>docs/agency/Guidance/measuring-ai-readiness.md — Summary; docs/agency/Guidance/measuring-ai-readiness.md — Deterministic validation matters most</p>
+            </details>
+            <details>
+              <summary><code>F-016</code>
+                <span>GitHub Copilot App Agency mode uses the same Agency foundation for configuration and integrations, while app-specific workflows can differ from the CLI.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                surfaces · released</p>
+              <p>docs/agency/GitHubCopilotApp/index.md — What Agency mode gives you</p>
+            </details>
+            <details>
+              <summary><code>F-017</code>
+                <span>The Agency API creates, validates, manages, and monitors hosted jobs in Azure DevOps.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                hosted · released</p>
+              <p>docs/agency/AzureDevOps/Agency API/overview.md — Agency API Overview</p>
+            </details>
+            <details>
+              <summary><code>F-018</code>
+                <span>Agency Hub in Azure DevOps starts, manages, and monitors background agent work from a browser.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                hosted · released</p>
+              <p>docs/agency/AzureDevOps/Experiences/agent-hub.md — Agency Hub in ADO</p>
+            </details>
+            <details>
+              <summary><code>F-019</code>
+                <span>Local Agency sessions load a version-matched built-in Agency plugin that includes support and pull-request completion skills without adding them to user plugin configuration.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                support · released</p>
+              <p>docs/agency/Tools/Plugins/plugins.md — The agency Plugin</p>
+            </details>
+            <details>
+              <summary><code>F-020</code>
+                <span>The plugin-evaluation command family is documented as experimental and version-sensitive.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                evaluation · experimental</p>
+              <p>docs/agency/Tools/Evals/index.md — Evals</p>
+            </details>
+            <details>
+              <summary><code>F-021</code>
+                <span>Agency marketplace scopes represent different curation and operational maturity levels.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                governance · released</p>
+              <p>docs/agency/Tools/Plugins/marketplaces.md — Marketplace Types</p>
+            </details>
+            <details>
+              <summary><code>F-022</code>
+                <span>Plugin engine compatibility is explicit and does not imply identical behavior across every supported engine.</span>
+              </summary>
+              <p><strong>fact</strong> ·
+                engines · released</p>
+              <p>docs/agency/Tools/Plugins/plugin-compatibility.md — Engine Compatibility</p>
+            </details>
+            <details>
+              <summary><code>I-001</code>
+                <span>Agency is best modeled as an integration, governance, and execution control plane around agent engines.</span>
+              </summary>
+              <p><strong>interpretation</strong> ·
+                architecture · released</p>
+              <p>Derived from F-001, F-002, F-017</p>
+            </details>
+            <details>
+              <summary><code>I-002</code>
+                <span>The product can be taught as six layers: surfaces, Agency control, portable capabilities, engine adapters, tools and resources, and execution environments.</span>
+              </summary>
+              <p><strong>interpretation</strong> ·
+                architecture · released</p>
+              <p>Derived from F-001, F-002, F-006, F-009, F-017</p>
+            </details>
+            <details>
+              <summary><code>I-003</code>
+                <span>Agency configuration is a provenance-aware merge graph rather than a single linear precedence list.</span>
+              </summary>
+              <p><strong>interpretation</strong> ·
+                configuration · released</p>
+              <p>Derived from F-003, F-004, F-005</p>
+            </details>
+            <details>
+              <summary><code>I-004</code>
+                <span>Effective tool access is the intersection of implemented tools, exposed tools, agent allowlists, and backing-service authorization.</span>
+              </summary>
+              <p><strong>interpretation</strong> ·
+                authorization · released</p>
+              <p>Derived from F-009</p>
+            </details>
+            <details>
+              <summary><code>I-005</code>
+                <span>Local sessions and hosted jobs share capability concepts but have distinct identity, configuration, compute, and validation boundaries.</span>
+              </summary>
+              <p><strong>interpretation</strong> ·
+                lifecycles · released</p>
+              <p>Derived from F-003, F-006, F-017, F-018</p>
+            </details>
+            <details>
+              <summary><code>I-006</code>
+                <span>The released improvement loop is observe, encode, evaluate, govern, deploy, and measure again.</span>
+              </summary>
+              <p><strong>interpretation</strong> ·
+                improvement · released</p>
+              <p>Derived from F-010, F-014, F-015, F-021</p>
+            </details>
+            <details>
+              <summary><code>R-001</code>
+                <span>Use isolated profiles when a run must not inherit ambient user or editor MCP configuration.</span>
+              </summary>
+              <p><strong>recommendation</strong> ·
+                configuration · released</p>
+              <p>Derived from F-005, I-003</p>
+            </details>
+            <details>
+              <summary><code>R-002</code>
+                <span>Pin mutable plugin, remote-configuration, artifact, and pipeline inputs when reproducibility matters.</span>
+              </summary>
+              <p><strong>recommendation</strong> ·
+                reproducibility · released</p>
+              <p>Derived from F-004, F-007, I-003</p>
+            </details>
+            <details>
+              <summary><code>R-003</code>
+                <span>Verify hosted agent results with deterministic checks, tests, policy, artifact inspection, or human review.</span>
+              </summary>
+              <p><strong>recommendation</strong> ·
+                hosted · released</p>
+              <p>Derived from F-015, F-017, I-005</p>
+            </details>
+            <details>
+              <summary><code>R-004</code>
+                <span>Use plugin evals for capability quality, include negative cases, and use batch runs for repeated reliability.</span>
+              </summary>
+              <p><strong>recommendation</strong> ·
+                evaluation · released</p>
+              <p>Derived from F-010, F-011, F-013</p>
+            </details>
+            <details>
+              <summary><code>R-005</code>
+                <span>Do not treat installability as proof of trust; consider source, ownership, pinning, review, and marketplace maturity.</span>
+              </summary>
+              <p><strong>recommendation</strong> ·
+                governance · released</p>
+              <p>Derived from F-007, F-021</p>
+            </details>
+            <details>
+              <summary><code>R-006</code>
+                <span>Measure telemetry at the entity grain that answers the question and account for delayed and intentionally incomplete coverage.</span>
+              </summary>
+              <p><strong>recommendation</strong> ·
+                observability · released</p>
+              <p>Derived from F-014</p>
+            </details>
+            <details>
+              <summary><code>R-007</code>
+                <span>Test local and hosted behavior separately because policy, identity, network, and compute boundaries differ.</span>
+              </summary>
+              <p><strong>recommendation</strong> ·
+                validation · released</p>
+              <p>Derived from F-017, I-005</p>
+            </details>
+            <details>
+              <summary><code>R-008</code>
+                <span>Encode lessons in the strongest practical mechanism: deterministic check, regression test, eval, runtime policy, then guidance.</span>
+              </summary>
+              <p><strong>recommendation</strong> ·
+                improvement · released</p>
+              <p>Derived from F-015, I-006</p>
+            </details>
+    </section>
+  </main>
+  <footer>Generated from repository data. No external assets or scripts.</footer>
+</body>
+</html>
