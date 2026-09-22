@@ -45,4 +45,13 @@ Results:
 
 ## Remaining
 
-- Git initialization, commit, public publication, and hosted CI verification.
+No implementation work remains.
+
+## Publication
+
+- Repository: https://github.com/xavierxmorris/agency-under-the-hood-guide
+- Initial commit: `3cc4b6d`
+- Hosted validation:
+  https://github.com/xavierxmorris/agency-under-the-hood-guide/actions/runs/35715518636
+- Ubuntu validation passed.
+- Windows validation passed.

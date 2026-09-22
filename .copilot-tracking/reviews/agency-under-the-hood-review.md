@@ -55,8 +55,9 @@ repository URLs, customer data, credentials, or proprietary source excerpts.
 - Isolated Agency probe passed.
 - Config precedence lab exercised successfully.
 - Batch preparation and independent validation helpers passed smoke tests.
+- Hosted GitHub Actions validation passed on Ubuntu and Windows:
+  https://github.com/xavierxmorris/agency-under-the-hood-guide/actions/runs/35715518636
 
 ## Disposition
 
-Approved for public publication after the final deterministic gate and hosted CI
-verification.
+Published publicly with final deterministic and hosted validation passing.
